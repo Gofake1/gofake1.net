@@ -1,0 +1,17 @@
+.blog-entry {
+  line-height: 1.5em;
+  margin: auto;
+  padding-bottom: 1.5em;
+  width: 60%;
+}
+.blog-entry h4 {
+  color: #787878;
+}
+.blog-entry li p {
+  margin: 0;
+}
+@media screen and (max-width: 480px) {
+  .blog-entry {
+    width: 90%;
+  }
+}

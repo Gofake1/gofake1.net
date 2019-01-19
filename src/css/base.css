@@ -1,0 +1,12 @@
+body {
+  background: #E8E8E8;
+  color: #282828;
+  font-family: -apple-system, "Helvetica Neue", "Arial", sans-serif;
+  font-size: 11pt;
+}
+a {
+  color: #545454;
+}
+img {
+  max-width: 100%;
+}

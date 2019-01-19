@@ -1,0 +1,9 @@
+.blog-list {
+  margin: auto;
+  width: 60%;
+}
+@media screen and (max-width: 480px) {
+  .blog-list {
+    width: 90%;
+  }
+}

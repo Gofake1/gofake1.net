@@ -1,0 +1,24 @@
+body {
+  margin: 0;
+}
+.canvas-wrap {
+  position: relative;
+}
+.canvas-wrap canvas {
+  display: block;
+  left: 0;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 0;
+  padding-right: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: -1;
+}
+.center {
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+}

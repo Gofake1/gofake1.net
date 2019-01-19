@@ -1,0 +1,46 @@
+.project-appicon {
+  height: 80px;
+  width: auto;
+}
+.project-appicon-wrapper {
+  margin-bottom: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 80px;
+}
+.project-date {
+  color: gray;
+}
+.project-entry {
+  line-height: 1.5em;
+  margin: auto;
+  padding-bottom: 1em;
+  width: 60%;
+}
+.project-entry h4 {
+  margin-bottom: 0;
+}
+.project-entry ul {
+  margin-top: 0;
+}
+.project-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.project-header h1 {
+  margin-bottom: 10px;
+}
+.project-header h3 {
+  margin-top: 0;
+}
+.project-text-wrapper {
+  flex-grow: 1;
+}
+@media screen and (max-width: 480px) {
+  .project-entry {
+    padding-left: 10px;
+    padding-right: 10px;
+    width: auto;
+  }
+}

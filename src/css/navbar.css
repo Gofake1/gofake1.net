@@ -1,0 +1,33 @@
+.navbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  line-height: 30px;
+}
+.navbar a {
+  text-decoration: none;
+}
+.navbar a:hover {
+  text-decoration: underline;
+}
+.navbar .selected {
+  text-decoration: underline;
+}
+.navbar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.navbar li {
+  display: inline;
+  padding-right: 10px;
+}
+.navbar .logo {
+  margin: 0;
+  padding-left: 10px;
+}
+@media screen and (max-width: 320px) {
+  .navbar li {
+    display: block;
+  }
+}

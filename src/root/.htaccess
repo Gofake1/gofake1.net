@@ -1,0 +1,19 @@
+RewriteEngine On
+RewriteCond %{SERVER_PORT} 80
+RewriteRule ^(.*)$ https://www.gofake1.net/$1 [R,L]
+SetOutputFilter DEFLATE
+AddOutputFilterByType DEFLATE text/plain
+AddOutputFilterByType DEFLATE text/html
+AddOutputFilterByType DEFLATE text/xml
+AddOutputFilterByType DEFLATE text/css
+AddOutputFilterByType DEFLATE application/atom+xml
+AddOutputFilterByType DEFLATE application/javascript
+ExpiresActive On
+ExpiresDefault "access plus 1209600 seconds"
+ErrorDocument 404 /404.html
+Header set Content-Security-Policy "default-src https: data:; img-src 'self' i.ytimg.com; script-src 'unsafe-eval' 'unsafe-inline' 'self'; style-src 'unsafe-inline' 'self'"
+Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+Header set Referrer-Policy strict-origin
+Header set X-Content-Type-Options "nosniff"
+Header set X-Frame-Options "DENY"
+Header set X-Xss-Protection "1; mode=block"

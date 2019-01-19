@@ -1,0 +1,21 @@
+.gallery-x {
+  background-color: #DADADA;
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.gallery-item {
+  flex: 0 0 auto;
+  padding: 1em;
+}
+@media screen and (max-height: 640px) {
+  .gallery-item img {
+    max-height: 320px;
+  }
+}
+@media screen and (max-width: 480px) {
+  .gallery-item img {
+    max-width: 240px;
+  }
+}

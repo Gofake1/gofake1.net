@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SubTube</title>
+  <style>
+  body {
+    font-family: -apple-system, sans-serif;
+    font-size: 10pt;
+  }
+  .grid {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+  }
+  .grid-item {
+    margin: 10px;
+    list-style: none;
+    padding: 0;
+    width: 196px;
+  }
+  .half-width {
+    width: 50%;
+  }
+  </style>
+</head>
+
+<body>
+  <div id="videos"></div>
+  <div id="settings">
+    <div id="message"></div>
+    <table>
+      <tr>
+        <td>
+          <select id="cutoffDaysSelect" onchange="updateSettings(this, 'cutoffDays')">
+            <option value="1">1 day</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+          </select>
+        </td>
+        <td>
+          <select id="viewModeSelect" onchange="updateSettings(this, 'viewMode')">
+            <option value="1">Stream</option>
+            <option value="2">Channels</option>
+          </select>
+        </td>
+        <td>
+          <textarea id="channelBox" rows="4" cols="75" onchange="updateSettings(this, 'channels')"></textarea>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div id="sidebar" class="half-width">
+    <div id="notice">
+      <i>Notice:</i> The new YouTube breaks SubTube; as a workaround, set your User-Agent to an older browser like Internet Explorer 7.
+    </div>
+    <div id="about">
+      <h3>About SubTube</h3>
+      SubTube is a self-contained webpage that gets the latest videos from YouTube channels you like. Unlike YouTube's subscription feature, SubTube doesn't require you to be logged in. You can save this webpage as a <a href="https://gofake1.net/files/subtube.html.txt">plain HTML file</a> and use it locally.
+    </div>
+    <div id="getstarted">
+      <h3>Get Started</h3>
+      For each user or channel on YouTube that you want to subscribe to, add the channel name to the text area above. To figure out the channel name, go to the channel's YouTube video page and look at the URL:
+      <ul>
+        <li>If the URL contains "user", enter the channel name that follows it without any changes. For "youtube.com/user/apple/videos", the channel name is "apple".</li>
+        <li>If the URL contains "channel", enter the channel name prepended by a "#". For "youtube.com/channel/ABCDEFGHIJKLM/videos", the channel name is "#ABCDEFGHIJKLM"</li>
+      </ul>
+      Seperate each channel name with a comma and <i>no space</i>.
+    </div>
+  </div>
+  <script>
+  // Put the channels you want here, or use the text area
+  var channelNames = [];
+
+  // Implementation
+  var channels = [];
+  var parser = new DOMParser();
+  var today = new Date();
+  var cutoffDays = localStorage.cutoffDays || 3;
+  var cutoffDate = new Date().setTime(today.getTime()-cutoffDays*(24*60*60*1000));
+  var viewMode = localStorage.viewMode || 1;
+
+  function dateFromString(string) {
+    if (string === null) {
+      return new Date();
+    }
+    string = string.replace('Streamed ', '');
+    var tokens = string.split(' ');
+    var amount = parseInt(tokens[0], 10);
+    var units = tokens[1];
+    var date = new Date();
+    switch (units) {
+      case 'second':
+      case 'seconds':
+        date.setTime(date.getTime()-amount*1000);
+        break;
+      case 'minute':
+      case 'minutes':
+        date.setTime(date.getTime()-amount*60*1000);
+        break;
+      case 'hour':
+      case 'hours':
+        date.setTime(date.getTime()-amount*60*60*1000);
+        break;
+      case 'day':
+      case 'days':
+        date.setTime(date.getTime()-amount*24*60*60*1000);
+        break;
+      case 'week':
+      case 'weeks':
+        date.setTime(date.getTime()-amount*7*24*60*60*1000);
+        break;
+      case 'month':
+      case 'months':
+        date.setTime(date.getTime()-amount*30*24*60*60*1000);
+        break;
+      case 'year':
+      case 'years':
+        date.setTime(date.getTime()-amount*365*24*60*60*1000);
+        break;
+      default:
+        console.warn('dateFromString: unknown case "'+units+'"');
+    }
+
+    return date;
+  }
+
+  function channel(name, videos) {
+    this.name = name;
+    this.videos = videos;
+  }
+
+  function video(title, duration, img, dateString, isLive, url) {
+    this.title = title;
+    this.duration = duration;
+    this.img = img;
+    this.dateString = dateString;
+    this.date = dateFromString(dateString);
+    this.isLive = isLive;
+    this.url = url;
+  }
+
+  function videoFromElement(element) {
+    var title = element.querySelector('a.yt-uix-sessionlink.yt-uix-tile-link.spf-link.yt-ui-ellipsis.yt-ui-ellipsis-2').text;
+    var durationElement = element.querySelector('span.video-time');
+    // New YouTube
+    if (!durationElement) {
+      durationElement = element.querySelector('span.video-time-overlay');
+    }
+    var duration;
+    // Videos aren't guaranteed to have a duration
+    if (durationElement) {
+      duration = durationElement.childNodes[0].textContent;
+    } else {
+      duration = 'Duration not available';
+    }
+    var img = element.querySelector('img').src;
+    var dateElement = element.querySelector('ul.yt-lockup-meta-info');
+    var dateString;
+    var isLive;
+    // Videos aren't guaranteed to have a date
+    if (!dateElement.childNodes[1]) {
+      dateString = null;
+      isLive = true;
+    } else {
+      dateString = dateElement.childNodes[1].textContent;
+      isLive = false;
+    }
+    var _url = new URL(element.querySelector('a.yt-uix-sessionlink').href);
+    var url = new URL(_url.pathname+_url.search, 'https://youtube.com');
+
+    return new video(title, duration, img, dateString, isLive, url);
+  }
+
+  function channelFromText(text) {
+    var htmlDoc = parser.parseFromString(text, 'text/html');
+    var name = htmlDoc.title.replace(' - YouTube', '');
+    var videos = [];
+    var videoElements = htmlDoc.getElementsByClassName('channels-content-item yt-shelf-grid-item');
+
+    for (var i = 0; i < videoElements.length; i++) {
+      var v = videoFromElement(videoElements[i]);
+
+      // Filter out old videos
+      if (v.date.getTime() > cutoffDate) {
+        videos.push(v);
+      }
+    }
+
+    return new channel(name, videos);
+  }
+
+  function streamFromChannels(channels) {
+    var stream = [];
+    for (var i = 0; i < channels.length; i++) {
+      for (var j = 0; j < channels[i].videos.length; j++) {
+        stream.push({
+          name: channels[i].name,
+          video: channels[i].videos[j]
+        });
+      }
+    }
+
+    return stream.sort(function(a, b) {
+      return b.video.date - a.video.date;
+    });
+  }
+
+  function htmlFromChannels(channels) {
+    var html = '<ul>';
+    for (var i = 0; i < channels.length; i++) {
+      html += '<li>';
+      html += '<h3>'+channels[i].name+'</h3>';
+      html += '<ul class="grid">';
+      for (var j = 0; j < channels[i].videos.length; j++) {
+        var v = channels[i].videos[j];
+        html += '<ul class="grid-item">';
+        html += '<li><a href="'+v.url+'"><img width="196" src='+v.img+'></a></li>';
+        html += '<li><a href="'+v.url+'">'+v.title+'</a></li>';
+        html += '<li>'+v.duration+'</li>';
+        html += '<li>'+(v.isLive ? 'Live Now' : v.dateString)+'</li>';
+        html += '</ul>';
+      }
+      html += '</ul>';
+      html += '</li>';
+    }
+    html += '</ul>';
+
+    return html;
+  }
+
+  function htmlFromStream(stream) {
+    var html = '<ul class="grid">';
+    for (var i = 0; i < stream.length; i++) {
+      var v = stream[i].video;
+      html += '<li>';
+      html += '<ul class="grid-item">';
+      html += '<li><a href="'+v.url+'"><img width="196" src='+v.img+'></a></li>';
+      html += '<li><a href="'+v.url+'">'+v.title+'</a></li>';
+      html += '<li>'+stream[i].name+'</li>';
+      html += '<li>'+v.duration+'</li>';
+      html += '<li>'+(v.isLive ? 'Live Now' : v.dateString)+'</li>';
+      html += '</ul>';
+      html += '</li>';
+    }
+    html += '</ul>';
+
+    return html;
+  }
+
+  function updateSettings(elem, setting) {
+    switch (setting) {
+      case 'cutoffDays':
+        localStorage.cutoffDays = elem.value;
+        break;
+      case 'channels':
+        localStorage.channels = elem.value;
+        break;
+      case 'viewMode':
+        localStorage.viewMode = elem.value;
+        break;
+    }
+    document.getElementById('message').innerHTML = 'Refresh the page to update.';
+  }
+
+  function requestHandler() {
+    if (this.readyState == 4 && this.status == 200) {
+      channels.push(channelFromText(this.responseText));
+
+      // Wait until all channels have been processed before generating HTML
+      if (channels.length == channelNames.length) {
+        if (viewMode == 1) {
+          document.getElementById('videos').innerHTML = htmlFromStream(streamFromChannels(channels));
+        } else {
+          document.getElementById('videos').innerHTML = htmlFromChannels(channels);
+        }
+      }
+    } else if (this.readyState == 4 && this.status == 404) {
+      document.getElementById('message').innerHTML = 'Error 404: Try checking your subscriptions for typos.';
+    } else if (this.readyState == 4) {
+      if (document.getElementById('message').innerHTML === '') {
+        document.getElementById('message').innerHTML = 'Error: Make sure cross-origin restrictions are disabled. Be warned that COR is a security measure; remember to reenable it when you\'re done using SubTube';
+      }
+    }
+  }
+
+  (function() {
+    if (localStorage.channels === undefined && channelNames.length === 0) {
+      document.getElementById('message').innerHTML = 'No subscriptions found.';
+    } else {
+      if (channelNames.length === 0) {
+        channelNames = localStorage.channels.split(',');
+      }
+      document.getElementById('channelBox').value = localStorage.channels;
+      document.getElementById('cutoffDaysSelect').selectedIndex = localStorage.cutoffDays-1;
+      document.getElementById('viewModeSelect').selectedIndex = localStorage.viewMode-1;
+      for (var i = 0; i < channelNames.length; i++) {
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = requestHandler;
+        if (channelNames[i].charAt(0) == '#') {
+          request.open('GET', 'https://www.youtube.com/channel/'+channelNames[i].substr(1)+'/videos', true);
+        } else {
+          request.open('GET', 'https://www.youtube.com/user/'+channelNames[i]+'/videos', true);
+        }
+        request.send();
+      }
+    }
+  })();
+  </script>
+</body>
+</html>

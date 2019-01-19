@@ -1,0 +1,17 @@
+.resume {
+  line-height: 1.5em;
+  margin: auto;
+  padding-bottom: 1.5em;
+  width: 60%;
+}
+.resume h4 {
+  margin-bottom: 0
+}
+.resume p {
+  margin: 0;
+}
+@media screen and (max-width: 480px) {
+  .resume {
+    width: 90%;
+  }
+}
