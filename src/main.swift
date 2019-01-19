@@ -44,7 +44,7 @@ func blog() -> [Artifact] {
       "Source code available on GitHub."),
     ("Static Site Generation with Swift", "18 Jan. 2019",
       "swift_static_sitegen", "2019-01-19T02:00:00Z",
-      "Lessons learned from automating this website")
+      "Lessons learned from automating this website.")
   ]
   let index = blogIndex(info.map { BlogLi($0.0, $0.1, $0.2+".html") })
   let feed = blog(info.map {
@@ -125,7 +125,9 @@ func projects() -> [Artifact] {
     ProjectLi("ExternalDisplayAutoBrightnessAgent",
               "Sync builtin Mac display brightness with external displays",
               "https://github.com/Gofake1/ExternalDisplayAutoBrightnessAgent"),
-    ProjectLi("Foodlog", "Simple nutrition journal", "foodlog.html")
+    ProjectLi("Foodlog", "Simple nutrition journal", "foodlog.html"),
+    ProjectLi("gofake1.net", "Generator for this website",
+              "https://github.com/Gofake1/gofake1.net")
   ])
   return [
     Artifact(serialize(html: index), "projects/index.html"),

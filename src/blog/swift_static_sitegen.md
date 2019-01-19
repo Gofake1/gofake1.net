@@ -15,3 +15,5 @@ Taking it a step further, templating is done in Swift as well, thanks to the exc
 The drawback to doing markup in code is actually writing it: I prefer the syntax of Markdown, so adding a Markdown parser is a worthwhile trade-off.
 
 Although other site generators like Jekyll are usable without requiring programming knowledge, I've come to believe that the flexibility offered by rolling your own solution will pay off in the long run. You won't be beholden to someone else's design, and static site generation is an easy enough problem to solve. If you can code, I encourage you to look into a more monolithic approach. Use helper code instead of frameworks. If you do, you'll get to use any folder hierarchy you want, avoid learning and working around template languages, and get the satisfaction of using software you designed and understand.
+
+**Source code** on [GitHub](https://github.com/Gofake1/gofake1.net)
