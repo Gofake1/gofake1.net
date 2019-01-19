@@ -21,7 +21,7 @@ func baseHead(title: String, styles: [Style],
 }
 
 func footer(_ content: [Html.Node]) -> Html.Node {
-  return div([Html.style("font-size: 12px; text-align: center;")], content)
+  return div([style("font-size: 12px; text-align: center;")], content)
 }
 
 func galleryX(_ imgs: [String], _ thumbs: [String]) -> Html.Node {
