@@ -7,6 +7,8 @@ This was the first macOS app that I made, and I appreciate all the feedback I've
 
 Here's a video of the first working prototype that I provided for App Review:
 
-<iframe src="https://player.vimeo.com/video/194273840" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+<div style="position: relative; overflow: hidden; padding-top: 56.25%">
+<iframe src="https://player.vimeo.com/video/194273840" width="640" height="360" frameborder="0" allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%"></iframe>
+</div>
 
 The original name was meant to be LIFX Remote, but I learned that apps need to be named "for Something" to avoid confusing customers.

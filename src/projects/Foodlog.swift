@@ -1,7 +1,7 @@
 import Html
 
 let foodlog = html([
-  baseHead(title: "Foodlog", styles: [.navbar, .projects]),
+  baseHead(title: "Foodlog", styles: [.gallery, .navbar, .projects]),
   body([
     navbar(),
     div([`class`("project-entry")], [

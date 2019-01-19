@@ -66,14 +66,14 @@ let lifxRemote = html([
       h4(["Version 1.5 - ", span([`class`("project-date")], ["26 Oct. 2017"])]),
       ul([
         li([
-          "Key bindings",
+          "Key bindings", br,
           img([src("/images/lifx_remote_key_bindings.png")])
         ])
       ]),
       h4(["Version 1.4 - ", span([`class`("project-date")], ["21 July 2017"])]),
       ul([
         li([
-          "Improved Menu UI",
+          "Improved Menu UI", br,
           img([src("/images/lifx_remote_1-3_to_1-4.png")])
         ])
       ]),

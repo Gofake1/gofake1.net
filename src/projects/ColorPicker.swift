@@ -1,7 +1,7 @@
 import Html
 
 let colorPicker = html([
-  baseHead(title: "Color Picker", styles: [.navbar, .projects]),
+  baseHead(title: "Color Picker", styles: [.gallery, .navbar, .projects]),
   body([
     navbar(),
     div([`class`("project-entry")], [
@@ -9,7 +9,7 @@ let colorPicker = html([
                     subtitle: "Color picker for macOS",
                     img: "/images/color_picker_icon.png"),
       galleryX(imgs, imgs),
-      "The macOS color panel has some annoying limitations:",
+      p(["The macOS color panel has some annoying limitations:"]),
       ul([
         li(["Can only be accessed through an app that contains a color well"]),
         li(["Disappears when the app that displayed it is no longer key"]),

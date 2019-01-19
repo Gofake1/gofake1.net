@@ -1,7 +1,7 @@
 import Html
 
 let nightlight = html([
-  baseHead(title: "Nightlight", styles: [.navbar, .projects]),
+  baseHead(title: "Nightlight", styles: [.gallery, .navbar, .projects]),
   body([
     navbar(),
     div([`class`("project-entry")], [
