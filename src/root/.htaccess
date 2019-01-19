@@ -10,6 +10,7 @@ AddOutputFilterByType DEFLATE application/atom+xml
 AddOutputFilterByType DEFLATE application/javascript
 ExpiresActive On
 ExpiresDefault "access plus 1209600 seconds"
+ErrorDocument 403 /403.html
 ErrorDocument 404 /404.html
 Header set Content-Security-Policy "default-src https: data:; img-src 'self' i.ytimg.com; script-src 'unsafe-eval' 'unsafe-inline' 'self'; style-src 'unsafe-inline' 'self'"
 Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"

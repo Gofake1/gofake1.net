@@ -118,9 +118,9 @@ func projects() -> [Artifact] {
               "snapclone.html"),
     ProjectLi("Nightlight", "Safari extension for darkening webpages",
               "nightlight.html"),
-    ProjectLi("minisweeper", "Minesweeper for macOS", "minisweeper.html"),
     ProjectLi("Remote Control for LIFX",
               "Control LIFX Lightbulbs from your Mac", "lifx_remote.html"),
+    ProjectLi("minisweeper", "Minesweeper for macOS", "minisweeper.html"),
     ProjectLi("Color Picker", "Color picker for macOS", "color_picker.html"),
     ProjectLi("ExternalDisplayAutoBrightnessAgent",
               "Sync builtin Mac display brightness with external displays",
@@ -143,7 +143,8 @@ func root() -> [Artifact] {
   return [
     Artifact(serialize(html: index(string("js/falling.js"))), "index.html"),
     Artifact(serialize(copy: "root/.htaccess"), ".htaccess"),
-    Artifact(serialize(html: error404), "404.html"),
+    Artifact(serialize(html: error(403, "Forbidden")), "403.html"),
+    Artifact(serialize(html: error(404, "Not Found")), "404.html"),
     Artifact(serialize(html: resume(string("root/resume.md"))), "resume.html")
   ]
 }

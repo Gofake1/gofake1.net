@@ -7,8 +7,8 @@ func index(_ script: String) -> Html.Node {
       div([`class`("canvas-wrap")], [canvas([id("canvas")], [])]),
       div([`class`("center")], [
         h3(["Gofake1"]),
-        p([a([href("/blog")], ["Blog"])]),
-        p([a([href("/projects")], ["Projects"])]),
+        p([a([href("/blog/")], ["Blog"])]),
+        p([a([href("/projects/")], ["Projects"])]),
         p([a([href("/resume.html")], ["Résumé"])]),
         p([
           a([href("mailto:david@gofake1.net")], ["Email"]),
