@@ -8,7 +8,7 @@ func resume(_ resume: String) -> Html.Node {
       div([`class`("resume")], try! markdown(resume) + [
         hr([]),
         p([style("margin: revert")], [
-          a([href("/projects/resume.pdf")], ["PDF"])
+          a([href("/files/resume.pdf")], ["PDF"])
         ])
       ])
     ])
