@@ -23,13 +23,15 @@ func render<T>(_ child: ChildOf<T>) -> String {
 
 private func render(_ node: Node, into output: inout String) {
   switch node {
+  case .element("link", let attrs, _):
+    output.append("<link")
+    render(attrs, into: &output)
+    output.append("/>")
   case .element(let tag, let attrs, let children):
     output.append("<\(tag)")
     render(attrs, into: &output)
     output.append(">")
-    if !children.isEmpty {
-      output.append("\(render(children))</\(tag)>")
-    }
+    output.append("\(render(children))</\(tag)>")
   case .text(let string):
     output.append(string)
   }
