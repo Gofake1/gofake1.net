@@ -1,11 +1,11 @@
 import Html
 
 let snapclone = html([
-  baseHead(title: "Snapchat", styles: [.navbar, .projects]),
+  baseHead(title: "Snapclone", styles: [.navbar, .projects]),
   body([
     navbar(),
     div([`class`("project-entry")], [
-      h1([style("margin-bottom: 10px;")], ["Snapchat"]),
+      h1([style("margin-bottom: 10px;")], ["Snapclone"]),
       h3([style("margin-top: 0;")], ["Human Computer Interaction (CSE 40424)"]),
       a([href("/images/snapchat.png")], [img([src("/images/snapchat.png")])]),
       p([
