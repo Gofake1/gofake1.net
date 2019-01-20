@@ -1,6 +1,6 @@
 import Html
 
-let minisweeper = html([
+let minisweeper = baseHtml([
   baseHead(title: "minisweeper", styles: [.navbar, .projects]),
   body([
     navbar(),

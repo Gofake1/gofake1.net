@@ -1,7 +1,7 @@
 import Html
 
 func index(_ script: String) -> Html.Node {
-  return html([
+  return baseHtml([
     baseHead(title: "Gofake1", styles: [.index]),
     body([onresize("onresize()")], [
       div([`class`("canvas-wrap")], [canvas([id("canvas")], [])]),

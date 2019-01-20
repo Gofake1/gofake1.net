@@ -1,6 +1,6 @@
 import Html
 
-let nightlight = html([
+let nightlight = baseHtml([
   baseHead(title: "Nightlight", styles: [.gallery, .navbar, .projects]),
   body([
     navbar(),

@@ -1,7 +1,7 @@
 import Html
 
 func projectsIndex(_ projects: [ProjectLi]) -> Html.Node {
-  return html([
+  return baseHtml([
     baseHead(title: "Gofake1 - Projects", styles: [.list, .navbar]),
     body([
       navbar(selection: .projects),

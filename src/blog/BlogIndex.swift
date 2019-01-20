@@ -1,7 +1,7 @@
 import Html
 
 func blogIndex(_ posts: [BlogLi]) -> Html.Node {
-  return html([
+  return baseHtml([
     baseHead(title: "Gofake1 - Blog", styles: [.list, .navbar], content: [
       link([
         href("feed.atom"),

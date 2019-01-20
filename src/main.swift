@@ -147,7 +147,7 @@ func root() -> [Artifact] {
     Artifact(serialize(copy: "root/.htaccess"), ".htaccess"),
     Artifact(serialize(html: error(403, "Forbidden")), "403.html"),
     Artifact(serialize(html: error(404, "Not Found")), "404.html"),
-    Artifact(serialize(html: resume(string("root/resume.md"))), "resume.html")
+    Artifact(serialize(html: resume), "resume.html")
   ]
 }
 

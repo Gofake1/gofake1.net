@@ -1,7 +1,7 @@
 import Html
 
 func blog(_ post: Blog) -> Html.Node {
-  return html([
+  return baseHtml([
     baseHead(title: post.title, styles: [.blog, .navbar]),
     body([
       navbar(),

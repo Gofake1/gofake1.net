@@ -7,5 +7,5 @@ This project produces a Swift tool (Builder), which takes these arguments:
 Builder path/to/src path/to/dst --verbose
 ```
 
-* `/path/to/src` should point to the project root.
+* `/path/to/src` should point to the project "src" directory.
 * `--verbose` is optional

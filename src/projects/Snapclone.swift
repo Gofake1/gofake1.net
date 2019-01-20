@@ -1,6 +1,6 @@
 import Html
 
-let snapclone = html([
+let snapclone = baseHtml([
   baseHead(title: "Snapclone", styles: [.navbar, .projects]),
   body([
     navbar(),

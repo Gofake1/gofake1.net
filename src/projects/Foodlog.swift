@@ -1,6 +1,6 @@
 import Html
 
-let foodlog = html([
+let foodlog = baseHtml([
   baseHead(title: "Foodlog", styles: [.gallery, .navbar, .projects]),
   body([
     navbar(),

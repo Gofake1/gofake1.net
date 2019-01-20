@@ -13,7 +13,7 @@ func blog(_ items: [FeedItem]) -> Node {
 
 /*
 func cse40175(_ items: [FeedItem]) -> Node {
-  let lastDate = items.map({ df.date(from: $0.2)! }).sorted().last!
+  let lastDate = items.compactMap({ df.date(from: $0.2) }).sorted().last!
   return feed([
     title("Gofake1 - CSE40175"),
     subtitle("Ethical and Professional Issues"),

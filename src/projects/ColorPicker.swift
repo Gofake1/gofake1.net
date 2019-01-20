@@ -1,6 +1,6 @@
 import Html
 
-let colorPicker = html([
+let colorPicker = baseHtml([
   baseHead(title: "Color Picker", styles: [.gallery, .navbar, .projects]),
   body([
     navbar(),

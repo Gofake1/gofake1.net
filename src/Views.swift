@@ -20,6 +20,10 @@ func baseHead(title: String, styles: [Style],
   ] + content)
 }
 
+func baseHtml(_ content: [Html.ChildOf<Html.Tag.Html>]) -> Html.Node {
+  return html([lang(.en)], content)
+}
+
 func footer(_ content: [Html.Node]) -> Html.Node {
   return div([style("font-size: 12px; text-align: center;")], content)
 }

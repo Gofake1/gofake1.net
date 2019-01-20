@@ -1,6 +1,6 @@
 import Html
 
-let lifxRemote = html([
+let lifxRemote = baseHtml([
   baseHead(title: "Remote Control for LIFX", styles: [.navbar, .projects]),
   body([
     navbar(),
