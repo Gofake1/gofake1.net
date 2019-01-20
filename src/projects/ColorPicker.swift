@@ -9,6 +9,18 @@ let colorPicker = html([
                     subtitle: "Color picker for macOS",
                     img: "/images/color_picker_icon.png"),
       galleryX(imgs, imgs),
+      p([
+        b(["Source code"]), " on ",
+        a([href("https://github.com/Gofake1/Color-Picker")], ["GitHub"]), ".",
+        br,
+        b(["Install"]), " from the ",
+        a([href("https://itunes.apple.com/us/app/color-picker-palette/id1238050457")], ["Mac App Store"]),
+        ".",
+        br,
+        "Or download it ",
+        a([href("https://github.com/Gofake1/Color-Picker/releases")], ["here"]),
+        "."
+      ]),
       p(["The macOS color panel has some annoying limitations:"]),
       ul([
         li(["Can only be accessed through an app that contains a color well"]),
@@ -22,24 +34,12 @@ let colorPicker = html([
         their favorite colors to "Palettes".
         """
       ]),
-      p([
-        b(["Source code"]), " on ",
-        a([href("https://github.com/Gofake1/Color-Picker")], ["GitHub"]), ".",
-        br,
-        b(["Install"]), " from the ",
-        a([href("https://itunes.apple.com/us/app/color-picker-palette/id1238050457")], ["Mac App Store"]),
-        ".",
-        br,
-        "Or download it ",
-        a([href("https://github.com/Gofake1/Color-Picker/releases")], ["here"]),
-        "."
-      ]),
       h2(["Changelog"]),
       h4(["Version 1.1.1 - ", span([`class`("project-date")], ["17 Sep. 2018"])]),
       ul([
         li(["Dark mode support"])
       ]),
-      h4(["Version 1.0 - ", span([`class`("project-date")], ["8 July 2017"])]),
+      h4(["Version 1.1 - ", span([`class`("project-date")], ["8 July 2017"])]),
       ul([
         li(["Palette window has contextual menus to edit and delete palettes"]),
         li(["Drag and drop colors from color picker and palette windows"]),
