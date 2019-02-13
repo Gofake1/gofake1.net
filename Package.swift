@@ -5,6 +5,7 @@ let package = Package(
   name: "gofake1.net",
   products: [
     .library(name: "Atom", targets: ["Atom"]),
+    .library(name: "HtmlCmarkSupport", targets: ["HtmlCmarkSupport"]),
     .executable(name: "Builder", targets: ["Builder"])
   ],
   dependencies: [
@@ -15,6 +16,10 @@ let package = Package(
   ],
   targets: [
     .target(name: "Atom", path: "Atom"),
-    .target(name: "Builder", dependencies: ["Atom", "Html"], path: "Builder")
+    .target(name: "Builder",
+            dependencies: ["Atom", "Html", "HtmlCmarkSupport"],
+            path: "Builder"),
+    .target(name: "HtmlCmarkSupport", dependencies: ["Html"],
+            path: "HtmlCmarkSupport")
   ]
 )

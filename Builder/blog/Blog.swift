@@ -1,4 +1,5 @@
 import Html
+import HtmlCmarkSupport
 
 func blog(_ post: Blog) -> Node {
   return baseHtml([

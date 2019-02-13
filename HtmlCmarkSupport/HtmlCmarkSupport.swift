@@ -2,7 +2,7 @@ import Ccmark
 import Foundation
 import Html
 
-func markdown(_ string: String) throws -> [Html.Node] {
+public func markdown(_ string: String) throws -> [Html.Node] {
   guard let root = cmark_parse_document(string, string.utf8.count, 0)
     else { throw NSError(domain: "Cmark", code: 1) }
   guard let iter = cmark_iter_new(root)
