@@ -1,6 +1,6 @@
 import Html
 
-func index(_ script: String) -> Html.Node {
+func index(_ script: String) -> Node {
   return baseHtml([
     baseHead(title: "Gofake1", styles: [.index]),
     body([onresize("onresize()")], [
@@ -15,7 +15,7 @@ func index(_ script: String) -> Html.Node {
           " (", a([href("/files/gofake1_pub.asc")], ["pgp"]), ")"
         ])
       ]),
-      element("script", [Html.Attribute<Html.Tag.Script>](), [.raw(script)])
+      element("script", [Attribute<Tag.Script>](), [.raw(script)])
     ])
   ])
 }

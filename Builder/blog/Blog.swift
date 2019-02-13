@@ -1,6 +1,6 @@
 import Html
 
-func blog(_ post: Blog) -> Html.Node {
+func blog(_ post: Blog) -> Node {
   return baseHtml([
     baseHead(title: post.title, styles: [.blog, .navbar]),
     body([

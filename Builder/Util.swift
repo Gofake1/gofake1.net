@@ -1,3 +1,4 @@
+import Atom
 import Foundation
 import Html
 
@@ -16,7 +17,7 @@ func serialize(html: Html.Node) -> (String) throws -> Void {
   return serialize(string: render([doctype, html]))
 }
 
-func serialize(feed: Node) -> (String) throws -> Void {
+func serialize(feed: Atom.Node) -> (String) throws -> Void {
   return serialize(string: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
                            + render(feed))
 }

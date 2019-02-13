@@ -1,6 +1,6 @@
 import Html
 
-func error(_ code: Int, _ message: String) -> Html.Node {
+func error(_ code: Int, _ message: String) -> Node {
   return baseHtml([
     baseHead(title: "Gofake1 - \(code)", styles: [.navbar]),
     body([

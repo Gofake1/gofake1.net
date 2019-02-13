@@ -1,3 +1,4 @@
+import Atom
 import Foundation
 
 func blog(_ items: [FeedItem]) -> Node {

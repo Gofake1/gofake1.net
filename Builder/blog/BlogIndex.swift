@@ -1,6 +1,6 @@
 import Html
 
-func blogIndex(_ posts: [BlogLi]) -> Html.Node {
+func blogIndex(_ posts: [BlogLi]) -> Node {
   return baseHtml([
     baseHead(title: "Gofake1 - Blog", styles: [.list, .navbar], content: [
       link([
