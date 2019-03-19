@@ -31,7 +31,7 @@ let foodlog = baseHtml([
       h2(["Support"]),
       h4(["How do I input a fraction for the serving amount?"]),
       """
-      Select the fraction option, and enter a "." for the seperator. It \
+      Select the fraction option, and enter a "." for the separator. It \
       will be replaced with a "/" when you leave the text field.
       """,
       h4(["How do I edit foods and tags?"]),

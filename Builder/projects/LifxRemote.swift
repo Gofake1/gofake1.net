@@ -6,13 +6,11 @@ let lifxRemote = baseHtml([
     navbar(),
     div([`class`("project-entry")], [
       div([style("border-style: solid; border-color: gray; border-width: 2px; padding: 1em;")],
-          ["This project is unmaintained"]),
+          ["This project is unmaintained."]),
       projectHeader(title: "Remote Control for LIFX",
                     subtitle: "Control LIFX Lightbulbs from your Mac",
                     img: "/images/lifx_remote_icon.png"),
-      a([href("/images/lifx_remote_hero.jpg")], [
-        img([src("/images/lifx_remote_hero.jpg")])
-      ]),
+      aImg("/images/lifx_remote_hero.jpg"),
       macAppStore("https://itunes.apple.com/us/app/remote-control-for-lifx/id1182646052"),
       p([
         b(["Source code"]), " on ",

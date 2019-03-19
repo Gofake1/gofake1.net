@@ -1,0 +1,25 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Ccmark",
+        "repositoryURL": "https://github.com/objcio/Ccmark.git",
+        "state": {
+          "branch": "master",
+          "revision": "4b584734d3200b39a6e8ae2776cd1b7d3c294888",
+          "version": null
+        }
+      },
+      {
+        "package": "Html",
+        "repositoryURL": "https://github.com/pointfreeco/swift-html.git",
+        "state": {
+          "branch": "a494cde",
+          "revision": "a494cde6a3d96c47253e84e10ea5d5b064f11777",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}

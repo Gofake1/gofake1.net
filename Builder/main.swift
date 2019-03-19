@@ -44,7 +44,9 @@ func blog() -> [Artifact] {
       "Source code available on GitHub."),
     ("Static Site Generation with Swift", "18 Jan. 2019",
       "swift_static_sitegen", "2019-01-19T02:00:00Z",
-      "Lessons learned from automating this website.")
+      "Lessons learned from automating this website."),
+    ("Don't Forget DMARC", "19 Mar. 2019", "dmarc", "2019-03-19T22:00:00Z",
+      "A spammer spoofed my email address.")
   ]
   let index = blogIndex(info.map { BlogLi($0.0, $0.1, $0.2+".html") })
   let feed = blog(info.map {

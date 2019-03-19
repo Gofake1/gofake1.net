@@ -7,9 +7,7 @@ let minisweeper = baseHtml([
     div([`class`("project-entry")], [
       projectHeader(title: "minisweeper", subtitle: "Minesweeper for macOS",
                     img: "/images/minisweeper_icon.png"),
-      a([href("/images/minisweeper.jpg")], [
-        img([src("/images/minisweeper.jpg")])
-      ]),
+      aImg("/images/minisweeper.jpg"),
       p([
         b(["Source code"]), " on ",
         a([href("https://github.com/Gofake1/minisweeper")], ["GitHub"]),

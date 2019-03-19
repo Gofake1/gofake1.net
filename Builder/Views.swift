@@ -1,5 +1,9 @@
 import Html
 
+func aImg(_ src: String) -> Node {
+  return a([href(src)], [img([Html.src(src)])])
+}
+
 func appStore(_ url: String) -> Node {
   return div([style("margin-top: 1em; text-align: center;")], [
     a([href(url)], [img([src("/images/app_store_badge.svg")])])

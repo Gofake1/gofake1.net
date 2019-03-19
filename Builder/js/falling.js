@@ -45,13 +45,13 @@ function animate(time) {
   }
 
   if (time-_lastMoveTime >= 10) {
-    _animate(function(sprite) {
+    _animate(sprite => {
       sprite.draw();
       sprite.move();
     });
     _lastMoveTime = time;
   } else {
-    _animate(function(sprite) {
+    _animate(sprite => {
       sprite.draw();
     });
   }

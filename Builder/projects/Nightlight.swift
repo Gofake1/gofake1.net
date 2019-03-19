@@ -39,7 +39,7 @@ let nightlight = baseHtml([
       h2([id("changelog")], ["Changelog"]),
       h4(["Version 1.2.1 - ", span([`class`("project-date")], ["27 Oct. 2018"])]),
       ul([
-        li(["File menu item to empty cache"]),
+        li(["Added File menu item to empty cache"]),
         li(["(Fix) Some background images weren't displayed; you may need to empty the cache."])
       ]),
       h4(["Version 1.2 - ", span([`class`("project-date")], ["18 Oct. 2018"])]),
