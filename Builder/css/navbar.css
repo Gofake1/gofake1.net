@@ -3,6 +3,8 @@
   flex-wrap: wrap;
   justify-content: space-between;
   line-height: 30px;
+  margin: auto;
+  max-width: 1024px;
 }
 .navbar a {
   text-decoration: none;

@@ -135,6 +135,10 @@ public func href(_ value: String) -> Attribute<Tag.Link> {
   return .init("href", value)
 }
 
+public func hreflang(_ value: String) -> Attribute<Tag.Link> {
+  return .init("hreflang", value)
+}
+
 public func rel(_ value: String) -> Attribute<Tag.Link> {
   return .init("rel", value)
 }

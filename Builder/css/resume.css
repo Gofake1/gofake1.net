@@ -1,6 +1,7 @@
 .resume {
   line-height: 1.5em;
   margin: auto;
+  max-width: 1024px;
   padding-bottom: 1.5em;
   width: 60%;
 }
