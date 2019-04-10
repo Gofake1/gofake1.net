@@ -8,25 +8,48 @@
     font-family: -apple-system, sans-serif;
     font-size: 10pt;
   }
-  .grid {
+  ul.grid {
     display: flex;
     flex-wrap: wrap;
     list-style: none;
     padding: 0;
   }
-  .grid-item {
-    margin: 10px;
+  ul.grid li {
+    position: relative;
+  }
+  ul.grid li .overlay {
+    background-color: blue;
+    color: white;
+    left: 10px;
+    padding: 3px;
+    position: absolute;
+    top: 10px;
+  }
+  ul.grid-item {
+    border: solid transparent 5px;
+    margin: 5px;
     list-style: none;
     padding: 0;
     width: 196px;
   }
-  .half-width {
-    width: 50%;
+  ul.grid-item.selected {
+    border-color: blue;
+  }
+  ul.grid-item.selecting, ul.grid-item.selecting a {
+    color: gray;
+  }
+  ul.grid-item.selecting img {
+    filter: brightness(50%);
   }
   </style>
 </head>
 
 <body>
+  <div id="selecting">
+    <label><input type="checkbox" onchange="toggleSelecting(this)">Select</label>
+    <button onclick="clearSelected()">Clear Selected</button>
+    <a id="m3u" download="subtube.m3u"><button onclick="exportSelected()">Export Selected as .m3u</button></a>
+  </div>
   <div id="videos"></div>
   <div id="settings">
     <div id="message"></div>
@@ -55,7 +78,7 @@
       </tr>
     </table>
   </div>
-  <div id="sidebar" class="half-width">
+  <div id="sidebar" style="max-width: 512px;">
     <div id="notice">
       <i>Notice:</i> The new YouTube breaks SubTube; as a workaround, set your User-Agent to an older browser like Internet Explorer 7.
     </div>
@@ -74,26 +97,25 @@
     </div>
   </div>
   <script>
-  // Put the channels you want here, or use the text area
-  var channelNames = [];
-
-  // Implementation
-  var channels = [];
-  var parser = new DOMParser();
-  var today = new Date();
-  var cutoffDays = localStorage.cutoffDays || 3;
-  var cutoffDate = new Date().setTime(today.getTime()-cutoffDays*(24*60*60*1000));
-  var viewMode = localStorage.viewMode || 1;
+  // jshint esversion: 6
+  const _parser = new DOMParser();
+  const _today = new Date();
+  const _channels = localStorage.channels || '';
+  const _cutoffDays = localStorage.cutoffDays || 3;
+  const _viewMode = localStorage.viewMode || 1;
+  const _ui_m3u = document.getElementById('m3u');
+  const _ui_message = document.getElementById('message');
+  const _ui_videos = document.getElementById('videos');
 
   function dateFromString(string) {
     if (string === null) {
       return new Date();
     }
     string = string.replace('Streamed ', '');
-    var tokens = string.split(' ');
-    var amount = parseInt(tokens[0], 10);
-    var units = tokens[1];
-    var date = new Date();
+    const tokens = string.split(' ');
+    const amount = parseInt(tokens[0], 10);
+    const units = tokens[1];
+    const date = new Date();
     switch (units) {
       case 'second':
       case 'seconds':
@@ -146,23 +168,23 @@
   }
 
   function videoFromElement(element) {
-    var title = element.querySelector('a.yt-uix-sessionlink.yt-uix-tile-link.spf-link.yt-ui-ellipsis.yt-ui-ellipsis-2').text;
-    var durationElement = element.querySelector('span.video-time');
+    const title = element.querySelector('a.yt-uix-sessionlink.yt-uix-tile-link.spf-link.yt-ui-ellipsis.yt-ui-ellipsis-2').text;
+    let durationElement = element.querySelector('span.video-time');
     // New YouTube
     if (!durationElement) {
       durationElement = element.querySelector('span.video-time-overlay');
     }
-    var duration;
+    let duration;
     // Videos aren't guaranteed to have a duration
     if (durationElement) {
       duration = durationElement.childNodes[0].textContent;
     } else {
       duration = 'Duration not available';
     }
-    var img = element.querySelector('img').src;
-    var dateElement = element.querySelector('ul.yt-lockup-meta-info');
-    var dateString;
-    var isLive;
+    const img = element.querySelector('img').src;
+    const dateElement = element.querySelector('ul.yt-lockup-meta-info');
+    let dateString;
+    let isLive;
     // Videos aren't guaranteed to have a date
     if (!dateElement.childNodes[1]) {
       dateString = null;
@@ -171,86 +193,141 @@
       dateString = dateElement.childNodes[1].textContent;
       isLive = false;
     }
-    var _url = new URL(element.querySelector('a.yt-uix-sessionlink').href);
-    var url = new URL(_url.pathname+_url.search, 'https://youtube.com');
+    const _url = new URL(element.querySelector('a.yt-uix-sessionlink').href);
+    const url = new URL(_url.pathname+_url.search, 'https://youtube.com');
 
     return new video(title, duration, img, dateString, isLive, url);
   }
 
+  const _cutoffDate = new Date().setTime(_today.getTime()-_cutoffDays*(24*60*60*1000));
   function channelFromText(text) {
-    var htmlDoc = parser.parseFromString(text, 'text/html');
-    var name = htmlDoc.title.replace(' - YouTube', '');
-    var videos = [];
-    var videoElements = htmlDoc.getElementsByClassName('channels-content-item yt-shelf-grid-item');
-
-    for (var i = 0; i < videoElements.length; i++) {
-      var v = videoFromElement(videoElements[i]);
-
-      // Filter out old videos
-      if (v.date.getTime() > cutoffDate) {
-        videos.push(v);
-      }
-    }
+    const htmlDoc = _parser.parseFromString(text, 'text/html');
+    const name = htmlDoc.title.replace(' - YouTube', '');
+    const videos = [].slice.call(htmlDoc.getElementsByClassName('channels-content-item yt-shelf-grid-item'))
+      .reduce((arr, elem) => {
+        const v = videoFromElement(elem);
+        if (v.date.getTime() > _cutoffDate) {
+          arr.push(v);
+        }
+        return arr;
+      }, []);
 
     return new channel(name, videos);
   }
 
   function streamFromChannels(channels) {
-    var stream = [];
-    for (var i = 0; i < channels.length; i++) {
-      for (var j = 0; j < channels[i].videos.length; j++) {
-        stream.push({
-          name: channels[i].name,
-          video: channels[i].videos[j]
-        });
+    const stream = [];
+    for (const channel of channels) {
+      for (const video of channel.videos) {
+        stream.push({ name: channel.name, video: video });
       }
     }
 
-    return stream.sort(function(a, b) {
-      return b.video.date - a.video.date;
-    });
+    return stream.sort((a, b) => b.video.date - a.video.date);
   }
 
   function htmlFromChannels(channels) {
-    var html = '<ul>';
-    for (var i = 0; i < channels.length; i++) {
+    let html = '<ul>';
+    for (const channel of channels) {
       html += '<li>';
-      html += '<h3>'+channels[i].name+'</h3>';
+      html += '<h3>'+channel.name+'<\/h3>';
       html += '<ul class="grid">';
-      for (var j = 0; j < channels[i].videos.length; j++) {
-        var v = channels[i].videos[j];
-        html += '<ul class="grid-item">';
-        html += '<li><a href="'+v.url+'"><img width="196" src='+v.img+'></a></li>';
-        html += '<li><a href="'+v.url+'">'+v.title+'</a></li>';
-        html += '<li>'+v.duration+'</li>';
-        html += '<li>'+(v.isLive ? 'Live Now' : v.dateString)+'</li>';
-        html += '</ul>';
+      for (const v of channel.videos) {
+        html += '<ul class="grid-item" data-url="'+v.url+'">';
+        html += '<li><a href="'+v.url+'"><img width="196" src='+v.img+'><\/a><\/li>';
+        html += '<li><a href="'+v.url+'">'+v.title+'<\/a><\/li>';
+        html += '<li>'+v.duration+'<\/li>';
+        html += '<li>'+(v.isLive ? 'Live Now' : v.dateString)+'<\/li>';
+        html += '<\/ul>';
       }
-      html += '</ul>';
-      html += '</li>';
+      html += '<\/ul>';
+      html += '<\/li>';
     }
-    html += '</ul>';
+    html += '<\/ul>';
 
     return html;
   }
 
   function htmlFromStream(stream) {
-    var html = '<ul class="grid">';
-    for (var i = 0; i < stream.length; i++) {
-      var v = stream[i].video;
+    let html = '<ul class="grid">';
+    for (const obj of stream) {
+      const v = obj.video;
       html += '<li>';
-      html += '<ul class="grid-item">';
-      html += '<li><a href="'+v.url+'"><img width="196" src='+v.img+'></a></li>';
-      html += '<li><a href="'+v.url+'">'+v.title+'</a></li>';
-      html += '<li>'+stream[i].name+'</li>';
-      html += '<li>'+v.duration+'</li>';
-      html += '<li>'+(v.isLive ? 'Live Now' : v.dateString)+'</li>';
-      html += '</ul>';
-      html += '</li>';
+      html += '<ul class="grid-item" data-url="'+v.url+'">';
+      html += '<li><a href="'+v.url+'"><img width="196" src='+v.img+'><\/a><\/li>';
+      html += '<li><a href="'+v.url+'">'+v.title+'<\/a><\/li>';
+      html += '<li>'+obj.name+'<\/li>';
+      html += '<li>'+v.duration+'<\/li>';
+      html += '<li>'+(v.isLive ? 'Live Now' : v.dateString)+'<\/li>';
+      html += '<\/ul>';
+      html += '<\/li>';
     }
-    html += '</ul>';
+    html += '<\/ul>';
 
     return html;
+  }
+
+  function toggleSelecting(elem) {
+    const items = [].slice.call(document.getElementsByClassName('grid-item'));
+    if (elem.checked) {
+      items.forEach(item => {
+        item.classList.add('selecting');
+        item.addEventListener('click', toggleSelection, false);
+        [].slice.call(item.querySelectorAll('li a')).forEach(a => {
+          a.onclick = (event) => { event.preventDefault(); };
+        });
+      });
+    } else {
+      items.forEach(item => {
+        item.classList.remove('selecting');
+        item.removeEventListener('click', toggleSelection);
+        [].slice.call(item.querySelectorAll('li a')).forEach(a => {
+          a.onclick = null;
+        });
+      });
+    }
+  }
+
+  const _playlist = new Map();
+  function toggleSelection() {
+    if (this.classList.contains('selected')) {
+      _playlist.delete(this.dataset.url);
+      let idx = 0;
+      for (const [url, node] of _playlist) {
+        idx++;
+        node.innerHTML = ''+idx;
+      }
+      this.classList.remove('selected');
+      const overlay = this.parentNode.querySelector('.overlay');
+      overlay.parentNode.removeChild(overlay);
+    } else {
+      this.classList.add('selected');
+      const overlay = document.createElement('div');
+      overlay.className = 'overlay';
+      this.parentNode.appendChild(overlay);
+      _playlist.set(this.dataset.url, this.parentNode.querySelector('.overlay'));
+      overlay.innerHTML = ''+_playlist.size;
+    }
+  }
+
+  function clearSelected() {
+    [].slice.call(document.querySelectorAll('.grid-item.selected'))
+      .forEach(item => {
+        item.classList.remove('selected');
+        const overlay = item.parentNode.querySelector('.overlay');
+        item.parentNode.removeChild(overlay);
+      });
+    URL.revokeObjectURL(_ui_m3u.href);
+    _ui_m3u.removeAttribute('href');
+    _playlist.clear();
+  }
+
+  function exportSelected() {
+    if (_ui_m3u.href) {
+      URL.revokeObjectURL(_ui_m3u.href);
+    }
+    const blob = new Blob([Array.from(_playlist.keys()).join('\n')], { type: 'text/plain' });
+    _ui_m3u.href = URL.createObjectURL(blob);
   }
 
   function updateSettings(elem, setting) {
@@ -265,52 +342,56 @@
         localStorage.viewMode = elem.value;
         break;
     }
-    document.getElementById('message').innerHTML = 'Refresh the page to update.';
+    _ui_message.innerHTML = 'Refresh the page to update.';
   }
 
-  function requestHandler() {
+  function setupUI() {
+    const ui = document.getElementById.bind(document);
+    ui('channelBox').value = _channels;
+    if (_channels.length == 0) {
+      _ui_message.innerHTML = 'No subscriptions found.';
+    }
+    ui('cutoffDaysSelect').selectedIndex = _cutoffDays-1;
+    ui('viewModeSelect').selectedIndex = _viewMode-1;
+  }
+
+  // TODO: Migrate to Promises
+  const _loadedChannels = [];
+  const _arrChannels = _channels.split(',');
+  function readyStateChanged() {
     if (this.readyState == 4 && this.status == 200) {
-      channels.push(channelFromText(this.responseText));
+      _loadedChannels.push(channelFromText(this.responseText));
 
       // Wait until all channels have been processed before generating HTML
-      if (channels.length == channelNames.length) {
-        if (viewMode == 1) {
-          document.getElementById('videos').innerHTML = htmlFromStream(streamFromChannels(channels));
+      if (_loadedChannels.length == _arrChannels.length) {
+        if (_viewMode == 1) {
+          _ui_videos.innerHTML = htmlFromStream(streamFromChannels(_loadedChannels));
         } else {
-          document.getElementById('videos').innerHTML = htmlFromChannels(channels);
+          _ui_videos.innerHTML = htmlFromChannels(_loadedChannels);
         }
       }
     } else if (this.readyState == 4 && this.status == 404) {
-      document.getElementById('message').innerHTML = 'Error 404: Try checking your subscriptions for typos.';
+      _ui_message.innerHTML = 'Error 404: Try checking your subscriptions for typos.';
     } else if (this.readyState == 4) {
-      if (document.getElementById('message').innerHTML === '') {
-        document.getElementById('message').innerHTML = 'Error: Make sure cross-origin restrictions are disabled. Be warned that COR is a security measure; remember to reenable it when you\'re done using SubTube';
-      }
+      _ui_message.innerHTML = 'Error: Make sure cross-origin restrictions are disabled. Be warned that COR is a security measure; remember to reenable it when you\'re done using SubTube';
     }
   }
 
-  (function() {
-    if (localStorage.channels === undefined && channelNames.length === 0) {
-      document.getElementById('message').innerHTML = 'No subscriptions found.';
-    } else {
-      if (channelNames.length === 0) {
-        channelNames = localStorage.channels.split(',');
+  function start() {
+    _arrChannels.forEach(c => {
+      const request = new XMLHttpRequest();
+      request.onreadystatechange = readyStateChanged;
+      if (c.charAt(0) == '#') {
+        request.open('GET', 'https://www.youtube.com/channel/'+c.substr(1)+'/videos', true);
+      } else {
+        request.open('GET', 'https://www.youtube.com/user/'+c+'/videos', true);
       }
-      document.getElementById('channelBox').value = localStorage.channels;
-      document.getElementById('cutoffDaysSelect').selectedIndex = localStorage.cutoffDays-1;
-      document.getElementById('viewModeSelect').selectedIndex = localStorage.viewMode-1;
-      for (var i = 0; i < channelNames.length; i++) {
-        var request = new XMLHttpRequest();
-        request.onreadystatechange = requestHandler;
-        if (channelNames[i].charAt(0) == '#') {
-          request.open('GET', 'https://www.youtube.com/channel/'+channelNames[i].substr(1)+'/videos', true);
-        } else {
-          request.open('GET', 'https://www.youtube.com/user/'+channelNames[i]+'/videos', true);
-        }
-        request.send();
-      }
-    }
-  })();
+      request.send();
+    });
+  }
+
+  setupUI();
+  start();
   </script>
 </body>
 </html>
