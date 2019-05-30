@@ -45,6 +45,7 @@
 </head>
 
 <body>
+  <div id="message"></div>
   <div id="selecting">
     <label><input type="checkbox" onchange="toggleSelecting(this)">Select</label>
     <button onclick="clearSelected()">Clear Selected</button>
@@ -52,7 +53,6 @@
   </div>
   <div id="videos"></div>
   <div id="settings">
-    <div id="message"></div>
     <table>
       <tr>
         <td>
@@ -293,9 +293,9 @@
     if (this.classList.contains('selected')) {
       _playlist.delete(this.dataset.url);
       let idx = 0;
-      for (const [url, node] of _playlist) {
+      for (const [url, overlay] of _playlist) {
         idx++;
-        node.innerHTML = ''+idx;
+        overlay.innerHTML = ''+idx;
       }
       this.classList.remove('selected');
       const overlay = this.parentNode.querySelector('.overlay');
@@ -304,9 +304,9 @@
       this.classList.add('selected');
       const overlay = document.createElement('div');
       overlay.className = 'overlay';
-      this.parentNode.appendChild(overlay);
-      _playlist.set(this.dataset.url, this.parentNode.querySelector('.overlay'));
+      _playlist.set(this.dataset.url, overlay);
       overlay.innerHTML = ''+_playlist.size;
+      this.parentNode.appendChild(overlay);
     }
   }
 
@@ -355,39 +355,36 @@
     ui('viewModeSelect').selectedIndex = _viewMode-1;
   }
 
-  // TODO: Migrate to Promises
-  const _loadedChannels = [];
-  const _arrChannels = _channels.split(',');
-  function readyStateChanged() {
-    if (this.readyState == 4 && this.status == 200) {
-      _loadedChannels.push(channelFromText(this.responseText));
-
-      // Wait until all channels have been processed before generating HTML
-      if (_loadedChannels.length == _arrChannels.length) {
+  function process(responses) {
+    const [good, bad] = responses.reduce((arrs, res) => {
+      arrs[res.ok ? 0 : 1].push(res);
+      return arrs;
+    }, [[], []]);
+    Promise.all(good.map(res => res.text().then(channelFromText)))
+      .then(cs => {
         if (_viewMode == 1) {
-          _ui_videos.innerHTML = htmlFromStream(streamFromChannels(_loadedChannels));
+          _ui_videos.innerHTML = htmlFromStream(streamFromChannels(cs));
         } else {
-          _ui_videos.innerHTML = htmlFromChannels(_loadedChannels);
+          _ui_videos.innerHTML = htmlFromChannels(cs);
         }
-      }
-    } else if (this.readyState == 4 && this.status == 404) {
-      _ui_message.innerHTML = 'Error 404: Try checking your subscriptions for typos.';
-    } else if (this.readyState == 4) {
-      _ui_message.innerHTML = 'Error: Make sure cross-origin restrictions are disabled. Be warned that COR is a security measure; remember to reenable it when you\'re done using SubTube';
-    }
+      })
+      .catch(error => console.error(error));
+    _ui_message.innerHTML = bad.map(res => {
+      return 'Error ' + res.status + ': ' + res.url;
+    }).join('\n');
   }
 
   function start() {
-    _arrChannels.forEach(c => {
-      const request = new XMLHttpRequest();
-      request.onreadystatechange = readyStateChanged;
-      if (c.charAt(0) == '#') {
-        request.open('GET', 'https://www.youtube.com/channel/'+c.substr(1)+'/videos', true);
-      } else {
-        request.open('GET', 'https://www.youtube.com/user/'+c+'/videos', true);
-      }
-      request.send();
+    const fetches = _channels.split(',').map(c => {
+      return c.charAt(0) == '#'
+        ? fetch('https://youtube.com/channel/'+c.substr(1)+'/videos')
+        : fetch('https://youtube.com/user/'+c+'/videos');
     });
+    Promise.all(fetches)
+      .then(process)
+      .catch(error => {
+        _ui_message.innerHTML = 'Error: Make sure cross-origin restrictions are disabled. Be warned that COR is a security measure; remember to reenable it when you\'re done using SubTube';
+      });
   }
 
   setupUI();

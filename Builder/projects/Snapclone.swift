@@ -7,7 +7,9 @@ let snapclone = baseHtml([
     div([`class`("project-entry")], [
       h1([style("margin-bottom: 10px;")], ["Snapclone"]),
       h3([style("margin-top: 0;")], ["Human Computer Interaction (CSE 40424)"]),
-      aImg("/images/snapchat.png"),
+      a([href("/images/snapchat.png")], [
+        img([src("/images/snapchat.png"), style("max-height: 80vh;")])
+      ]),
       p([
         b(["Source code"]), " on ",
         a([href("https://github.com/Gofake1/Snapclone")], ["GitHub"]), "."

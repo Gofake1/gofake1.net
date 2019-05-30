@@ -105,8 +105,10 @@ function moveWavy(sprite) {
 }
 
 function onresize() {
-  _ctx.canvas.width = document.body.clientWidth;
-  _ctx.canvas.height = document.body.clientHeight;
+  const scale = window.devicePixelRatio;
+  _ctx.canvas.width = document.body.clientWidth * scale;
+  _ctx.canvas.height = document.body.clientHeight * scale;
+  _ctx.scale(scale, scale);
   _ctx.strokeStyle = "#545454";
 }
 
