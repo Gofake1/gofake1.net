@@ -37,6 +37,13 @@ let nightlight = baseHtml([
       h2([id("privacy")], ["Privacy"]),
       p(["Crashes and energy reports may be collected by Apple if allowed by the user."]),
       h2([id("changelog")], ["Changelog"]),
+      h4(["Version 1.3 - ", span([`class`("project-date")], ["2 Jun. 2019"])]),
+      ul([
+        li(["Don't darken iframes"]),
+        li(["Lighten selection color instead of darken (WIP)"]),
+        li(["Improved border colors"]),
+        li(["(Fix) Custom and Sunrise timers worked inconsistently"])
+      ]),
       h4(["Version 1.2.1 - ", span([`class`("project-date")], ["27 Oct. 2018"])]),
       ul([
         li(["Added File menu item to empty cache"]),

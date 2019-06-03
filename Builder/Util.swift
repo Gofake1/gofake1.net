@@ -53,10 +53,18 @@ private func serialize(string: String) -> (String) throws -> Void {
   return {
     let dst = World.dstUrl.appendingPathComponent($0)
     World.print(dst)
-    if !World.fileManager.createFile(atPath: dst.absoluteString,
-                                     contents: string.data(using: .utf8)) {
-      throw NSError(domain: NSPOSIXErrorDomain, code: Int(errno),
-                    userInfo: ["path": dst.absoluteString])
+    // Don't write to file if equivalent file already exists
+    if World.fileManager.fileExists(atPath: dst.absoluteString) {
+      let data = World.fileManager.contents(atPath: dst.absoluteString)
+        ?? Data()
+      let existingStr = String(data: data, encoding: .utf8)
+      if string != existingStr {
+        if !World.fileManager.createFile(atPath: dst.absoluteString,
+                                         contents: string.data(using: .utf8)) {
+          throw NSError(domain: NSPOSIXErrorDomain, code: Int(errno),
+                        userInfo: ["path": dst.absoluteString])
+        }
+      }
     }
   }
 }

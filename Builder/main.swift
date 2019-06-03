@@ -129,11 +129,13 @@ func projects() -> [Artifact] {
               "https://github.com/Gofake1/ExternalDisplayAutoBrightnessAgent"),
     ProjectLi("Foodlog", "Simple nutrition journal", "foodlog.html"),
     ProjectLi("gofake1.net", "Generator for this website",
-              "https://github.com/Gofake1/gofake1.net")
+              "https://github.com/Gofake1/gofake1.net"),
+    ProjectLi("egret", "Web mail client", "egret.html")
   ])
   return [
     Artifact(serialize(html: index), "projects/index.html"),
     Artifact(serialize(html: colorPicker), "projects/color_picker.html"),
+    Artifact(serialize(html: egret), "projects/egret.html"),
     Artifact(serialize(html: foodlog), "projects/foodlog.html"),
     Artifact(serialize(html: lifxRemote), "projects/lifx_remote.html"),
     Artifact(serialize(html: minisweeper), "projects/minisweeper.html"),
