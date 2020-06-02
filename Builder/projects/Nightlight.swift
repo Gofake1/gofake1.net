@@ -16,7 +16,7 @@ let nightlight = baseHtml([
       ]),
       p([
         b(["Source code"]), " on ",
-        a([href("https://github.com/Gofake1/Nightligh")], ["GitHub"]),
+        a([href("https://github.com/Gofake1/Nightlight")], ["GitHub"]),
         ".", br,
         b(["Install"]), " from the ",
         a([href("https://itunes.apple.com/us/app/nightlight-for-safari/id1429386865")], ["Mac App Store"]),

@@ -36,8 +36,9 @@ func serialize(copy srcPath: String) -> (String) throws -> Void {
   }
 }
 
-private let styleValues = [
-  Style.base: string("css/base.css"),
+private let styleValues: [Style] = [
+  .about: string("css/about.css"),
+  .base: string("css/base.css"),
   .blog: string("css/blog.css"),
   .cse40175: string("css/cse40175.css"),
   .cse40175Index: string("css/cse40175Index.css"),
@@ -46,7 +47,6 @@ private let styleValues = [
   .list: string("css/list.css"),
   .navbar: string("css/navbar.css"),
   .projects: string("css/projects.css"),
-  .resume: string("css/resume.css")
 ]
 
 private func serialize(string: String) -> (String) throws -> Void {
@@ -58,13 +58,14 @@ private func serialize(string: String) -> (String) throws -> Void {
       let data = World.fileManager.contents(atPath: dst.absoluteString)
         ?? Data()
       let existingStr = String(data: data, encoding: .utf8)
-      if string != existingStr {
-        if !World.fileManager.createFile(atPath: dst.absoluteString,
-                                         contents: string.data(using: .utf8)) {
-          throw NSError(domain: NSPOSIXErrorDomain, code: Int(errno),
-                        userInfo: ["path": dst.absoluteString])
-        }
+      if string == existingStr {
+        return
       }
     }
-  }
+    if !World.fileManager.createFile(atPath: dst.absoluteString,
+                                     contents: string.data(using: .utf8)) {
+      throw NSError(domain: NSPOSIXErrorDomain, code: Int(errno),
+                    userInfo: ["path": dst.absoluteString])
+    }
+}
 }

@@ -1,12 +1,28 @@
 body {
-  background: #E8E8E8;
-  color: #282828;
   font-family: -apple-system, sans-serif;
   font-size: 11pt;
 }
-a {
-  color: #545454;
-}
+
 img {
   max-width: 100%;
+}
+
+@media (prefers-color-scheme: light) {
+  body {
+    background: #E8E8E8;
+    color: #282828;
+  }
+  a {
+    color: #545454;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #1C1C1C;
+    color: #EEE;
+  }
+  a {
+    color: #B2B2B2;
+  }
 }

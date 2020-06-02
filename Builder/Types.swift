@@ -14,6 +14,7 @@ enum NavbarSelection {
 }
 
 enum Style {
+  case about
   case base
   case blog
   case cse40175
@@ -23,5 +24,4 @@ enum Style {
   case list
   case navbar
   case projects
-  case resume
 }

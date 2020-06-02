@@ -1,18 +1,18 @@
-.resume {
+.about {
   line-height: 1.5em;
   margin: auto;
   max-width: 1024px;
   padding-bottom: 1.5em;
   width: 60%;
 }
-.resume h4 {
+.about h4 {
   margin-bottom: 0
 }
-.resume p {
+.about p {
   margin: 0;
 }
 @media screen and (max-width: 480px) {
-  .resume {
+  .about {
     width: 90%;
   }
 }
